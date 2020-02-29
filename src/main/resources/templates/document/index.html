@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>知识管理平台</title>
-    <link rel="stylesheet" href="../layui/css/layui.css">
-    <script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="../../static/layui/src/css/layui.css">
+    <script src="../../static/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <style>
@@ -80,7 +80,8 @@
         float: right;
         display: none;
     }
-    .article-item-box .article-item-bottom-right p span{
+
+    .article-item-box .article-item-bottom-right p span {
         font-size: 16px;
     }
 
@@ -146,10 +147,11 @@
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div class="article-list">
-            <div class="article-item-box" onmouseenter="showArticleItemBottomRight(0)" onmouseleave="hiddenArticleItemBottomRight(0)">
+            <div class="article-item-box" onmouseenter="showArticleItemBottomRight(0)"
+                 onmouseleave="hiddenArticleItemBottomRight(0)">
                 <h4 class="article-item-title">
                     <a href="www.baidu.com" target="_blank">
-                        <span >原创</span>oracle 数据库
+                        <span>原创</span>oracle 数据库
                     </a>
                 </h4>
                 <p class="article-item-desc">Instant：时间戳 Duration：持续时间，时间差 LocalDate：只包含日期，比如：2016-10-20
@@ -642,11 +644,11 @@
         </div>
 
         <!--<div class="layui-footer" style="width: 100%;left: 0px;text-align: center">-->
-            <!--&lt;!&ndash; 底部固定区域 &ndash;&gt;-->
-            <!--© layui.com - 底部固定区域-->
+        <!--&lt;!&ndash; 底部固定区域 &ndash;&gt;-->
+        <!--© layui.com - 底部固定区域-->
         <!--</div>-->
     </div>
-    <script src="../layui/layui.js"></script>
+    <script src="../../static/layui/src/layui.js"></script>
     <script>
         //JavaScript代码区域
         layui.use('element', function () {
@@ -654,5 +656,6 @@
 
         });
     </script>
+</div>
 </body>
 </html>
