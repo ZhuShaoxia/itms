@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>知识管理平台</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--文章评论js-->
+    <script src="../js/article-comment.js" type="text/javascript" charset="utf-8"></script>
+
+    <!--评论内容 css -->
+    <link rel="stylesheet" type="text/css" href="../css/article.css"/>
+
+</head>
+
+<body class="layui-layout-body ">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">知识管理平台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item">
+                <a href="javascript:;">文档管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">MarkDown编辑</a></dd>
+                    <dd><a href="">富文本编辑</a></dd>
+                    <!--<dd><a href="">授权管理</a></dd>-->
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">评论管理</a></li>
+            <li class="layui-nav-item"><a href="">用户管理</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    金弢
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退了</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-container">
+        <!-- 内容主体区域 -->
+        <div class="layui-row article-content">
+            <div class="layui-col-md12">
+                123
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md6">123</div>
+            <div class="layui-col-md6">456</div>
+        </div>
+
+        <!-- 评论专区  -->
+        <!--<div class="comment-list">-->
+            <!--&lt;!&ndash;评论内容输入区&ndash;&gt;-->
+            <!--<div class="page-comment-input">-->
+                <!--<div class="container reply" style="width: 30%;float: left;display: none">-->
+                    <!--<button type="button" class="btn close" data-toggle="popover" data-trigger="hover"-->
+                            <!--data-content="取消回复"-->
+                            <!--data-placement="right"-->
+                            <!--onclick="closeReply()">&times;-->
+                    <!--</button>-->
+                    <!--<span>回复<span class="reply-floor" id="reply-floor"></span>楼:@<a href="" class="reply-username"-->
+                                                                                    <!--id="reply-username"></a></span>-->
+                <!--</div>-->
+                <!--<textarea name="page-comment-content" id="comment-textarea" placeholder="写下你的评论..."></textarea>-->
+                <!--<button id="commentBtn" class="btn btn-danger pull-right">评论</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <script src="../layui/layui.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+
+        });
+
+        /*评论js */
+        $(function () {
+            var commentNum = $("#page-comment-list").children().length
+            var i = $("#page-comment-list").children().length
+
+            var articleId = "${article.id}"
+            var userId = "${user.id}"
+
+            var userName = '${user.name}'
+
+            $("#commentBtn").on('click', function () {
+                var commentContent = $("#comment-textarea").val()
+                if (userName == '') {
+                    alert('请先补全用户信息')
+                    window.location.href = "/user/setting/info"
+                    return;
+                }
+                if (!validate(commentContent.trim())) {
+                    alert("请输入评论内容")
+                    return;
+                }
+                var floorUserId = $("input[id='floorUserId[" + commentNum + "]'").val()
+                var currentNum = commentNum + 1
+                $("#comment-textarea").val("");
+                var commentTime = new Date().Format("yyyy-MM-dd HH:mm:ss")
+                var commentHtml = "<div class=\"row page-comment-item\" id=\"comments[" + currentNum + "]\">\n" +
+                    "            <div class=\"col-md-1 head-img\" style=\"text-align: center;\">\n" +
+                    "                <img id=\"comments[" + currentNum + "].headImg\" src=\"${user.imgUrl}\" class=\"img-fluid\"/>\n" +
+                    "                <p>" + (commentNum + 1) + "楼</p>\n" +
+                    "            </div>" +
+                    "<input type=\"hidden\" id=\"floorUserId[" + currentNum + "]\" value=\"${user.id}\">" +
+                    "            <div class=\"col-md-9\">\n"
+
+                var replyFloor = $("#reply-floor").text().trim();
+                if (validate(replyFloor)) {
+                    var replyUsername = $("#reply-username").text().trim()
+                    replyFloor = parseInt(replyFloor);
+                    var replyCommentContent = $("p[id='comments[" + replyFloor + "].comment']").text();
+                    if (replyCommentContent.length > 100) {
+                        replyCommentContent = replyCommentContent.substr(0, 100);
+                        replyCommentContent += "[略略略...]";
+                    }
+                    commentHtml = commentHtml.concat("<blockquote>\n" +
+                        "                    <span>回复<span class=\"reply-floor\">" + replyFloor + "</span>楼:@<a href=\"/user/info/" + floorUserId + "\">" + replyUsername + "</a></span>\n" +
+                        "                    <p>" + replyCommentContent + "</p>\n" +
+                        "                </blockquote>\n")
+
+                }
+                commentHtml = commentHtml.concat("<h5>\n" +
+                    "                                 <a id=\"comments[" + currentNum + "].username\" href=\"/user/info/${user.id}\">" + '${user.nickname}' + "</a>\n" +
+                    "                             </h5>\n" +
+                    "                <div class=\"comment\">\n" +
+                    "                    <p id=\"comments[" + currentNum + "].comment\">" + commentContent + "</p>\n" +
+                    "                </div>\n" +
+                    "                <h5 style=\"border-top: 1px dashed grey;padding: 5px;\">\n" +
+                    "                    <img class=\"comment-time-img\" src=\"/img/time-logo.png\" class=\"img-fluid\"/><span class=\"comment-time\">" + commentTime + "</span>\n" +
+                    "                    <span class=\"comment-reply\" onclick=\"replay(" + currentNum + ")\">回复</span>\n" +
+                    "                </h5>\n" +
+                    "            </div>\n" +
+                    "        </div>")
+
+                if (commentNum == 0) {
+                    $(".comment-null").fadeOut();
+                    $("#page-comment-list").append(commentHtml);
+                } else {
+                    $("div[id='comments[" + i + "]").after(commentHtml);
+                    i++;
+                }
+                //存入数据库
+                commentNum++;
+                closeReply()
+                var replyCon = $("p[id='comments[" + replyFloor + "].comment']").text();
+                $.ajax({
+                    data: {
+                        "article.id": articleId,
+                        "user.id": userId,
+                        "replyUser.id": floorUserId,
+                        floor: currentNum,
+                        content: commentContent,
+                        replyFloor: replyFloor,
+                        replyContent: replyCon
+                    },
+                    url: '/comment/add',
+                    success: function (res) {
+                        if (res.code == '-1') {
+                            alert('评论发表失败')
+                        }
+                    },
+                    error: function () {
+                        alert('后台请求出错')
+                    }
+                })
+            })
+
+        })
+    </script>
+</div>
+</body>
+</html>
