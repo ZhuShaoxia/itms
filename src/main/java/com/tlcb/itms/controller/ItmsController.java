@@ -25,7 +25,7 @@ public class ItmsController {
         params.put("name", "zhuxiaolei");
         params.put("age", "24");
 
-        return "index";
+        return "document/index";
     }
 
     public String test(ModelMap map) {
