@@ -24,9 +24,6 @@ public class ItmsController {
     @RequestMapping("/")
     @ResponseBody
     public String index(Map<String, String> params) {
-        params.put("name", "zhuxiaolei");
-        params.put("age", "24");
-
         return "index";
     }
 
