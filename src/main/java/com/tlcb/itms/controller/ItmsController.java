@@ -4,6 +4,7 @@ import com.tlcb.itms.vo.UserInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,12 @@ import java.util.Map;
 public class ItmsController {
 
     @RequestMapping("/")
+    @ResponseBody
     public String index(Map<String, String> params) {
         params.put("name", "zhuxiaolei");
         params.put("age", "24");
 
-        return "document/index";
+        return "index";
     }
 
     public String test(ModelMap map) {
